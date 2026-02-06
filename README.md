@@ -14,8 +14,6 @@ Small ESP8266 (NodeMCU/ESP‑12) firmware that:
 - Static IP defaults to `192.168.100.27` (configurable in `WiFiHelper::configureStaticIp`).
 
 Reference docs and photos are in `docs/`:
-- ![Board close‑up](docs/IMG_1171.jpg)
-- ![Wiring detail](docs/IMG_1172.jpg)
 - ![Enclosure](docs/IMG_1173.jpg)
 - ![Installed](docs/IMG_1174.jpg)
 - Pinout notes: [docs/pinout.md](docs/pinout.md)
