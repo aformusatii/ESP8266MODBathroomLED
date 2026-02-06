@@ -1,11 +1,13 @@
 // Do not remove the include below
 #include "ESP8266MODBathroomLED.h"
+#include "Watchdog.h"
 
 WiFiHelper wiFiHelper;
 ESP8266WebServer server(80);
 ESP8266HTTPUpdateServer httpUpdater;
 ServerHelper serverHelper("ESP8266MODBathroomLEDV1.00", &server);
 Logger logger;
+Watchdog watchdog("48:2A:E3:20:D6:81", "192.168.100.2", "192.168.100.255", 9);
 
 #define SOLID_STATE_RELAY_OUT_PIN  5
 #define RF_MODULE_IN_PIN           4
@@ -150,5 +152,6 @@ void loop()
 		server.handleClient();
 	}
 
+	watchdog.loop();
 	relayLoop(current_time);
 }
