@@ -12,7 +12,7 @@ Logger logger;
 
 // Timed relay-off support
 static bool relayTimeoutArmed = false;
-static unsigned long relayOffAtMs = 0;
+static unsigned long relayOffAtMs = 0; 
 
 
 //The setup function is called once at startup of the sketch
@@ -51,11 +51,11 @@ void handleNotFound() {
 }
 
 void setRelayState() {
-  StaticJsonDocument<500> request;
+  JsonDocument request;
   deserializeJson(request, server.arg("plain"));
 
-  if (request.containsKey("on")) {
-    bool relayOn = request["on"];
+  if (request["on"].is<bool>()) {
+    bool relayOn = request["on"].as<bool>();
     digitalWrite(SOLID_STATE_RELAY_OUT_PIN, relayOn ? HIGH : LOW);
 
     // Any explicit OFF cancels pending timeout
@@ -63,8 +63,8 @@ void setRelayState() {
       relayTimeoutArmed = false;
     } else {
       // Optional timeout (milliseconds). If not provided => on forever.
-      if (request.containsKey("timeoutMs")) {
-        unsigned long timeoutMs = request["timeoutMs"];
+      if (request["timeoutMs"].is<unsigned long>()) {
+        unsigned long timeoutMs = request["timeoutMs"].as<unsigned long>();
         relayOffAtMs = millis() + timeoutMs;   // overflow-safe when used with subtraction
         relayTimeoutArmed = true;
       } else {
@@ -78,7 +78,7 @@ void setRelayState() {
 }
 
 void getRelayState() {
-  StaticJsonDocument<100> rootDoc;
+  JsonDocument rootDoc;
 
   // Read current relay output level and expose it as boolean "on"
   bool relayOn = (digitalRead(SOLID_STATE_RELAY_OUT_PIN) == HIGH);
@@ -104,13 +104,13 @@ void setupHTTPActions() {
 }
 
 void health() {
-	StaticJsonDocument<50> rootDoc;
+	JsonDocument rootDoc;
 	rootDoc["status"] = "UP";
 	writeJson(200, rootDoc);
 }
 
 void writeOk() {
-	StaticJsonDocument<50> rootDoc;
+	JsonDocument rootDoc;
 	rootDoc["ok"] = true;
 	writeJson(200, rootDoc);
 }
@@ -122,7 +122,7 @@ void writeJson(int httpStatus, const JsonDocument &doc) {
 }
 
 void setupAfterWiFiConnected() {
-	StaticJsonDocument<256> rootDoc;
+	JsonDocument rootDoc;
 	//rootDoc["IP"] = WiFi.localIP();
 	logger.info(rootDoc, "Connected to WiFi");
 
